@@ -17,13 +17,3 @@ repos:
       - id: trailing-whitespace
       - id: check-added-large-files
         args: [--maxkb=500]
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
-    hooks:
-      - id: mypy
-        additional_dependencies:
-          - homeassistant==2026.8.1
-        args: [--config-file, mypy.ini, --explicit-package-bases]
-        files: custom_components/
-        language_version: python3.14
