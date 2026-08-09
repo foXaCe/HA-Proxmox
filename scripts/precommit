@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+echo "=== Pre-commit (prek) ==="
+prek run --all-files --show-diff-on-failure
+echo "=== OK ==="
