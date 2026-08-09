@@ -66,9 +66,7 @@ jobs:
 
       - name: Build zip
         run: |
-          cd custom_components/proxmoxve
-          zip -r ../../proxmoxve.zip . -x "*.pyc" "__pycache__/*"
-          cd ../..
+          zip -r proxmoxve.zip custom_components/proxmoxve -x "*.pyc" "__pycache__/*"
           sha256sum proxmoxve.zip > proxmoxve.zip.sha256
 
       - name: Upload assets to release
