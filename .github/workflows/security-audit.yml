@@ -56,7 +56,6 @@ jobs:
         with:
           scan-args: |
             --recursive
-            --skip-git
             ./
         continue-on-error: false
 
