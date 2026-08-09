@@ -44,7 +44,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ProxmoxConfigEntry) -> b
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    entry.async_on_unload(entry.add_update_listener(async_update_listener))
+
     return True
+
+
+async def async_update_listener(hass: HomeAssistant, entry: ProxmoxConfigEntry) -> None:
+    """Update listener for config entry options changes."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_migrate_entry(hass: HomeAssistant, entry: ProxmoxConfigEntry) -> bool:

@@ -1,131 +1,33 @@
-"""Binary sensor to read Proxmox VE data."""
+"""Binary sensor platform for Proxmox VE integration."""
 
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Any, override
+from __future__ import annotations
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntity,
-    BinarySensorEntityDescription,
-)
-from homeassistant.const import EntityCategory
+from typing import Any
+
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import (
-    NODE_ONLINE,
-    STATUS_OK,
-    STORAGE_ACTIVE,
-    STORAGE_ENABLED,
-    STORAGE_SHARED,
-    VM_CONTAINER_RUNNING,
-    ProxmoxPermission,
+from .api.models import ProxmoxNodeData
+from .coordinator import ProxmoxConfigEntry
+from .devices.container import (
+    CONTAINER_BINARY_SENSORS,
+    ProxmoxContainerBinarySensor,
 )
-from .coordinator import ProxmoxConfigEntry, ProxmoxNodeData
-from .entity import (
-    ProxmoxContainerEntity,
-    ProxmoxNodeEntity,
-    ProxmoxStorageEntity,
-    ProxmoxVMEntity,
+from .devices.node import (
+    NODE_BINARY_SENSORS,
+    ProxmoxNodeBinarySensor,
+)
+from .devices.storage import (
+    STORAGE_BINARY_SENSORS,
+    ProxmoxStorageBinarySensor,
+)
+from .devices.vm import (
+    VM_BINARY_SENSORS,
+    ProxmoxVMBinarySensor,
 )
 from .helpers import is_granted
 
 PARALLEL_UPDATES = 0
-
-
-@dataclass(frozen=True, kw_only=True)
-class ProxmoxContainerBinarySensorEntityDescription(BinarySensorEntityDescription):
-    """Class to hold Proxmox container binary sensor description."""
-
-    state_fn: Callable[[dict[str, Any]], bool | None]
-
-
-@dataclass(frozen=True, kw_only=True)
-class ProxmoxVMBinarySensorEntityDescription(BinarySensorEntityDescription):
-    """Class to hold Proxmox endpoint binary sensor description."""
-
-    state_fn: Callable[[dict[str, Any]], bool | None]
-
-
-@dataclass(frozen=True, kw_only=True)
-class ProxmoxNodeBinarySensorEntityDescription(BinarySensorEntityDescription):
-    """Class to hold Proxmox node binary sensor description."""
-
-    state_fn: Callable[[ProxmoxNodeData], bool | None]
-    permission: ProxmoxPermission = ProxmoxPermission.SYSAUDIT
-    permission_target: str = "nodes"
-
-
-@dataclass(frozen=True, kw_only=True)
-class ProxmoxStorageBinarySensorEntityDescription(BinarySensorEntityDescription):
-    """Class to hold Proxmox storage binary sensor description."""
-
-    state_fn: Callable[[dict[str, Any]], bool | None]
-
-
-NODE_SENSORS: tuple[ProxmoxNodeBinarySensorEntityDescription, ...] = (
-    ProxmoxNodeBinarySensorEntityDescription(
-        key="status",
-        translation_key="status",
-        state_fn=lambda data: data.node["status"] == NODE_ONLINE,
-        device_class=BinarySensorDeviceClass.RUNNING,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        permission=ProxmoxPermission.VMAUDIT,  # PVEVMUsers are allowed this node, through "/vms"
-        permission_target="vms",
-    ),
-    ProxmoxNodeBinarySensorEntityDescription(
-        key="node_backup_status",
-        translation_key="node_backup_status",
-        state_fn=lambda data: bool(
-            data.backups and data.backups[0]["status"] != STATUS_OK
-        ),
-        device_class=BinarySensorDeviceClass.PROBLEM,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
-    ),
-)
-
-CONTAINER_SENSORS: tuple[ProxmoxContainerBinarySensorEntityDescription, ...] = (
-    ProxmoxContainerBinarySensorEntityDescription(
-        key="status",
-        translation_key="status",
-        state_fn=lambda data: data["status"] == VM_CONTAINER_RUNNING,
-        device_class=BinarySensorDeviceClass.RUNNING,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-)
-
-VM_SENSORS: tuple[ProxmoxVMBinarySensorEntityDescription, ...] = (
-    ProxmoxVMBinarySensorEntityDescription(
-        key="status",
-        translation_key="status",
-        state_fn=lambda data: data["status"] == VM_CONTAINER_RUNNING,
-        device_class=BinarySensorDeviceClass.RUNNING,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-)
-
-STORAGE_SENSORS: tuple[ProxmoxStorageBinarySensorEntityDescription, ...] = (
-    ProxmoxStorageBinarySensorEntityDescription(
-        key="storage_active",
-        translation_key="storage_active",
-        state_fn=lambda data: data["active"] == STORAGE_ACTIVE,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-    ProxmoxStorageBinarySensorEntityDescription(
-        key="storage_enabled",
-        translation_key="storage_enabled",
-        state_fn=lambda data: data["enabled"] == STORAGE_ENABLED,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-    ProxmoxStorageBinarySensorEntityDescription(
-        key="storage_shared",
-        translation_key="storage_shared",
-        state_fn=lambda data: data["shared"] == STORAGE_SHARED,
-        entity_category=EntityCategory.DIAGNOSTIC,
-    ),
-)
 
 
 async def async_setup_entry(
@@ -138,13 +40,12 @@ async def async_setup_entry(
 
     def _async_add_new_nodes(nodes: list[ProxmoxNodeData]) -> None:
         """Add new node binary sensors."""
-
         async_add_entities(
             ProxmoxNodeBinarySensor(coordinator, entity_description, node)
             for node in nodes
-            for entity_description in NODE_SENSORS
+            for entity_description in NODE_BINARY_SENSORS
             if is_granted(
-                coordinator.permissions,
+                coordinator.client.permissions,
                 p_type=entity_description.permission_target,
                 p_id=node.node["node"],
                 permission=entity_description.permission,
@@ -158,7 +59,7 @@ async def async_setup_entry(
         async_add_entities(
             ProxmoxVMBinarySensor(coordinator, entity_description, vm, node_data)
             for (node_data, vm) in vms
-            for entity_description in VM_SENSORS
+            for entity_description in VM_BINARY_SENSORS
         )
 
     def _async_add_new_containers(
@@ -170,7 +71,7 @@ async def async_setup_entry(
                 coordinator, entity_description, container, node_data
             )
             for (node_data, container) in containers
-            for entity_description in CONTAINER_SENSORS
+            for entity_description in CONTAINER_BINARY_SENSORS
         )
 
     def _async_add_new_storages(
@@ -182,7 +83,7 @@ async def async_setup_entry(
                 coordinator, entity_description, storage, node_data
             )
             for (node_data, storage) in storages
-            for entity_description in STORAGE_SENSORS
+            for entity_description in STORAGE_BINARY_SENSORS
         )
 
     coordinator.new_nodes_callbacks.append(_async_add_new_nodes)
@@ -221,51 +122,3 @@ async def async_setup_entry(
             if (node_data.node["node"], storage_id) in coordinator.known_storages
         ]
     )
-
-
-class ProxmoxNodeBinarySensor(ProxmoxNodeEntity, BinarySensorEntity):
-    """A binary sensor for reading Proxmox VE node data."""
-
-    entity_description: ProxmoxNodeBinarySensorEntityDescription
-
-    @property
-    @override
-    def is_on(self) -> bool | None:
-        """Return true if the binary sensor is on."""
-        return self.entity_description.state_fn(self.coordinator.data[self.device_name])
-
-
-class ProxmoxVMBinarySensor(ProxmoxVMEntity, BinarySensorEntity):
-    """Representation of a Proxmox VM binary sensor."""
-
-    entity_description: ProxmoxVMBinarySensorEntityDescription
-
-    @property
-    @override
-    def is_on(self) -> bool | None:
-        """Return true if the binary sensor is on."""
-        return self.entity_description.state_fn(self.vm_data)
-
-
-class ProxmoxContainerBinarySensor(ProxmoxContainerEntity, BinarySensorEntity):
-    """Representation of a Proxmox Container binary sensor."""
-
-    entity_description: ProxmoxContainerBinarySensorEntityDescription
-
-    @property
-    @override
-    def is_on(self) -> bool | None:
-        """Return true if the binary sensor is on."""
-        return self.entity_description.state_fn(self.container_data)
-
-
-class ProxmoxStorageBinarySensor(ProxmoxStorageEntity, BinarySensorEntity):
-    """Representation of a Proxmox Storage binary sensor."""
-
-    entity_description: ProxmoxStorageBinarySensorEntityDescription
-
-    @property
-    @override
-    def is_on(self) -> bool | None:
-        """Return true if the binary sensor is on."""
-        return self.entity_description.state_fn(self.storage_data)

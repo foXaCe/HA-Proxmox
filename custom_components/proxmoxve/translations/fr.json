@@ -1,0 +1,348 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Cet appareil est déjà configuré.",
+      "reauth_successful": "La ré-authentification a réussi.",
+      "reconfigure_successful": "La reconfiguration a réussi."
+    },
+    "error": {
+      "api_error_no_details": "Une erreur s'est produite lors de la communication avec l'instance Proxmox VE.",
+      "cannot_connect": "Impossible de se connecter au serveur Proxmox VE",
+      "connect_timeout": "Délai de connexion dépassé",
+      "invalid_auth": "Authentification invalide",
+      "invalid_scan_interval": "L'intervalle de rafraîchissement doit être d'au moins 5 secondes",
+      "no_nodes_found": "Aucun nœud actif n'a été trouvé sur le serveur Proxmox VE.",
+      "no_vmlxc_found": "Aucun LXC ni VM n'a été trouvé sur le serveur Proxmox VE.",
+      "ssl_error": "La vérification SSL a échoué. Vérifiez les paramètres SSL."
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "password": "Mot de passe",
+          "realm": "Royaume",
+          "token_id": "Identifiant du jeton",
+          "token_value": "Secret"
+        },
+        "data_description": {
+          "password": "Le mot de passe de l'utilisateur",
+          "realm": "Précisez votre royaume d'authentification",
+          "token_id": "Le nom donné au jeton d'API",
+          "token_value": "Le secret généré pour le jeton d'API"
+        },
+        "description": "La connexion au serveur Proxmox VE nécessite une ré-authentification. Veuillez mettre à jour vos identifiants pour continuer.",
+        "title": "Ré-authentifier l'intégration Proxmox VE"
+      },
+      "reconfigure": {
+        "data": {
+          "auth_method": "Méthode d'authentification",
+          "host": "Hôte",
+          "port": "Port",
+          "token": "Utiliser un jeton d'API",
+          "username": "Nom d'utilisateur",
+          "verify_ssl": "Vérifier SSL"
+        },
+        "data_description": {
+          "auth_method": "Sélectionnez le fournisseur d'authentification de votre serveur Proxmox VE",
+          "host": "Le nom d'hôte ou l'adresse IP de votre serveur Proxmox VE",
+          "port": "Le port de votre serveur Proxmox VE (défaut : 8006)",
+          "token": "Activez pour utiliser un jeton d'API, ou laissez désactivé pour vous authentifier avec un mot de passe",
+          "username": "Le nom d'utilisateur du serveur Proxmox VE",
+          "verify_ssl": "Vérifier les certificats SSL. Désactivez uniquement en cas de certificat auto-signé."
+        },
+        "description": "Utilisez le formulaire suivant pour reconfigurer la connexion à votre serveur Proxmox VE.",
+        "title": "Reconfigurer l'intégration Proxmox VE"
+      },
+      "reconfigure_auth": {
+        "data": {
+          "password": "Mot de passe",
+          "realm": "Royaume",
+          "token_id": "Identifiant du jeton",
+          "token_value": "Secret"
+        },
+        "data_description": {
+          "password": "Le mot de passe de l'utilisateur",
+          "realm": "Précisez votre royaume d'authentification",
+          "token_id": "Le nom donné au jeton d'API",
+          "token_value": "Le secret généré pour le jeton d'API"
+        },
+        "description": "Saisissez vos identifiants pour vous authentifier auprès de Proxmox VE.",
+        "title": "Identifiants Proxmox VE"
+      },
+      "user": {
+        "data": {
+          "auth_method": "Méthode d'authentification",
+          "host": "Hôte",
+          "port": "Port",
+          "token": "Utiliser un jeton d'API",
+          "username": "Nom d'utilisateur",
+          "verify_ssl": "Vérifier SSL"
+        },
+        "data_description": {
+          "auth_method": "Sélectionnez le fournisseur d'authentification de votre serveur Proxmox VE",
+          "host": "Le nom d'hôte ou l'adresse IP de votre serveur Proxmox VE",
+          "port": "Le port de votre serveur Proxmox VE (défaut : 8006)",
+          "token": "Activez pour utiliser un jeton d'API, ou laissez désactivé pour vous authentifier avec un mot de passe",
+          "username": "Le nom d'utilisateur du serveur Proxmox VE",
+          "verify_ssl": "Vérifier les certificats SSL. Désactivez uniquement en cas de certificat auto-signé."
+        },
+        "description": "Saisissez les informations de votre serveur Proxmox VE pour configurer l'intégration.",
+        "title": "Se connecter à Proxmox VE"
+      },
+      "user_auth": {
+        "data": {
+          "password": "Mot de passe",
+          "realm": "Royaume",
+          "token_id": "Identifiant du jeton",
+          "token_value": "Secret"
+        },
+        "data_description": {
+          "password": "Le mot de passe de l'utilisateur",
+          "realm": "Précisez votre royaume d'authentification",
+          "token_id": "Le nom donné au jeton d'API",
+          "token_value": "Le secret généré pour le jeton d'API"
+        },
+        "description": "Saisissez vos identifiants pour vous authentifier auprès de Proxmox VE.",
+        "title": "Identifiants Proxmox VE"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "node_backup_status": {
+        "name": "État de la sauvegarde"
+      },
+      "status": {
+        "name": "État"
+      },
+      "storage_active": {
+        "name": "Stockage actif",
+        "state": {
+          "off": "Inactif",
+          "on": "Actif"
+        }
+      },
+      "storage_enabled": {
+        "name": "Stockage activé",
+        "state": {
+          "off": "Désactivé",
+          "on": "Activé"
+        }
+      },
+      "storage_shared": {
+        "name": "Stockage partagé",
+        "state": {
+          "off": "Non partagé",
+          "on": "Partagé"
+        }
+      }
+    },
+    "button": {
+      "hibernate": {
+        "name": "Suspendre"
+      },
+      "reset": {
+        "name": "Réinitialiser"
+      },
+      "resume_all": {
+        "name": "Reprendre"
+      },
+      "shutdown": {
+        "name": "Éteindre"
+      },
+      "snapshot_create": {
+        "name": "Créer un instantané"
+      },
+      "start": {
+        "name": "Démarrer"
+      },
+      "start_all": {
+        "name": "Tout démarrer"
+      },
+      "stop": {
+        "name": "Arrêter"
+      },
+      "stop_all": {
+        "name": "Tout arrêter"
+      },
+      "suspend_all": {
+        "name": "Tout suspendre"
+      }
+    },
+    "sensor": {
+      "container_cpu": {
+        "name": "Utilisation du processeur"
+      },
+      "container_disk": {
+        "name": "Utilisation du disque"
+      },
+      "container_max_cpu": {
+        "name": "Processeur maximal"
+      },
+      "container_max_disk": {
+        "name": "Utilisation maximale du disque"
+      },
+      "container_max_memory": {
+        "name": "Utilisation maximale de la mémoire"
+      },
+      "container_memory": {
+        "name": "Utilisation de la mémoire"
+      },
+      "container_memory_percentage": {
+        "name": "Pourcentage d'utilisation de la mémoire"
+      },
+      "container_netin": {
+        "name": "Entrée réseau"
+      },
+      "container_netout": {
+        "name": "Sortie réseau"
+      },
+      "container_status": {
+        "name": "État",
+        "state": {
+          "running": "En cours",
+          "stopped": "Arrêté",
+          "suspended": "Suspendu"
+        }
+      },
+      "container_uptime": {
+        "name": "Durée de fonctionnement"
+      },
+      "node_backup_duration": {
+        "name": "Durée de la sauvegarde"
+      },
+      "node_backup_last_backup": {
+        "name": "Dernière sauvegarde"
+      },
+      "node_cpu": {
+        "name": "Utilisation du processeur"
+      },
+      "node_disk": {
+        "name": "Utilisation du disque"
+      },
+      "node_max_cpu": {
+        "name": "Processeur maximal"
+      },
+      "node_max_disk": {
+        "name": "Utilisation maximale du disque"
+      },
+      "node_max_memory": {
+        "name": "Utilisation maximale de la mémoire"
+      },
+      "node_memory": {
+        "name": "Utilisation de la mémoire"
+      },
+      "node_memory_percentage": {
+        "name": "Pourcentage d'utilisation de la mémoire"
+      },
+      "node_status": {
+        "name": "État",
+        "state": {
+          "offline": "Hors ligne",
+          "online": "En ligne"
+        }
+      },
+      "node_uptime": {
+        "name": "Durée de fonctionnement"
+      },
+      "storage_available": {
+        "name": "Stockage disponible"
+      },
+      "storage_total": {
+        "name": "Stockage total"
+      },
+      "storage_used": {
+        "name": "Stockage utilisé"
+      },
+      "storage_used_percentage": {
+        "name": "Pourcentage d'utilisation du stockage"
+      },
+      "vm_cpu": {
+        "name": "Utilisation du processeur"
+      },
+      "vm_disk": {
+        "name": "Utilisation du disque"
+      },
+      "vm_max_cpu": {
+        "name": "Processeur maximal"
+      },
+      "vm_max_disk": {
+        "name": "Utilisation maximale du disque"
+      },
+      "vm_max_memory": {
+        "name": "Utilisation maximale de la mémoire"
+      },
+      "vm_memory": {
+        "name": "Utilisation de la mémoire"
+      },
+      "vm_memory_percentage": {
+        "name": "Pourcentage d'utilisation de la mémoire"
+      },
+      "vm_netin": {
+        "name": "Entrée réseau"
+      },
+      "vm_netout": {
+        "name": "Sortie réseau"
+      },
+      "vm_status": {
+        "name": "État",
+        "state": {
+          "running": "En cours",
+          "stopped": "Arrêté",
+          "suspended": "Suspendu"
+        }
+      },
+      "vm_uptime": {
+        "name": "Durée de fonctionnement"
+      }
+    }
+  },
+  "exceptions": {
+    "api_error_details": {
+      "message": "Une erreur s'est produite lors de la communication avec l'instance Proxmox VE."
+    },
+    "cannot_connect": {
+      "message": "Une erreur s'est produite lors de la tentative de connexion à l'instance Proxmox VE."
+    },
+    "invalid_auth": {
+      "message": "Une erreur s'est produite lors de la tentative d'authentification."
+    },
+    "no_nodes_found": {
+      "message": "Aucun nœud actif n'a été trouvé sur le serveur Proxmox VE."
+    },
+    "no_vmlxc_found": {
+      "message": "Aucun LXC ni VM n'a été trouvé sur le serveur Proxmox VE."
+    },
+    "permissions_error": {
+      "message": "Impossible de récupérer les autorisations Proxmox VE. Veuillez vérifier vos identifiants et réessayer."
+    },
+    "ssl_error": {
+      "message": "Une erreur SSL s'est produite."
+    },
+    "timeout_connect": {
+      "message": "Un délai d'attente s'est produit lors de la tentative de connexion à l'instance Proxmox VE."
+    }
+  },
+  "selector": {
+    "auth_method": {
+      "options": {
+        "other": "Utiliser un autre royaume (précisé à l'étape suivante)",
+        "pam": "Utilisateur Linux - authentification standard PAM",
+        "pve": "Utilisateur Proxmox - serveur d'authentification Proxmox VE"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Intervalle de rafraîchissement"
+        },
+        "data_description": {
+          "scan_interval": "Nombre de secondes entre deux cycles d'interrogation de l'API (minimum : 5 secondes)"
+        },
+        "description": "Configurez les options d'interrogation de Proxmox VE.",
+        "title": "Options Proxmox VE"
+      }
+    }
+  }
+}

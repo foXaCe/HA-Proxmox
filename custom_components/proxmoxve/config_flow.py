@@ -1,16 +1,19 @@
 """Config flow for Proxmox VE integration."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping
 import logging
 from typing import Any, override
 
-from proxmoxer import AuthenticationError, ProxmoxAPI
-from proxmoxer.core import ResourceException
-import requests
-from requests.exceptions import ConnectTimeout, SSLError
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -30,7 +33,16 @@ from homeassistant.helpers.selector import (
     TextSelectorType,
 )
 
-from .common import sanitize_config_entry
+from .api import (
+    ProxmoxAuthError,
+    ProxmoxClient,
+    ProxmoxConnectionError as ApiConnectionError,
+    ProxmoxNodesNotFoundError as ApiNoNodesError,
+    ProxmoxPermissionsError,
+    ProxmoxServerError as ApiServerError,
+    ProxmoxSSLError as ApiSSLError,
+    ProxmoxTimeoutError,
+)
 from .const import (
     AUTH_METHODS,
     AUTH_OTHER,
@@ -39,18 +51,22 @@ from .const import (
     CONF_NODE,
     CONF_NODES,
     CONF_REALM,
+    CONF_SCAN_INTERVAL,
     CONF_TOKEN_ID,
     CONF_TOKEN_SECRET,
     CONF_VMS,
     DEFAULT_PORT,
     DEFAULT_REALM,
-    DEFAULT_TIMEOUT,
+    DEFAULT_SCAN_INTERVAL,
     DEFAULT_VERIFY_SSL,
     DOMAIN,
+    MIN_SCAN_INTERVAL,
     NODE_ONLINE,
 )
+from .helpers import sanitize_config_entry
 
 _LOGGER = logging.getLogger(__name__)
+
 BASE_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_AUTH_METHOD, default=DEFAULT_REALM): SelectSelector(
@@ -90,48 +106,36 @@ TOKEN_SCHEMA = vol.Schema(
 
 def _get_nodes_data(data: dict[str, Any]) -> list[dict[str, Any]]:
     """Validate the user input and fetch data (sync, for executor)."""
-    auth_kwargs = (
-        {
-            "token_name": data[CONF_TOKEN_ID],
-            "token_value": data[CONF_TOKEN_SECRET],
-        }
-        if data.get(CONF_TOKEN)
-        else {"password": data.get(CONF_PASSWORD)}
-    )
-    data = sanitize_config_entry(data)
+    client = ProxmoxClient(data)
     try:
-        client = ProxmoxAPI(
-            host=data[CONF_HOST],
-            port=data[CONF_PORT],
-            user=data[CONF_USERNAME],
-            verify_ssl=data.get(CONF_VERIFY_SSL, DEFAULT_VERIFY_SSL),
-            timeout=DEFAULT_TIMEOUT,
-            **auth_kwargs,
-        )
-    except AuthenticationError as err:
+        client.connect()
+    except ProxmoxAuthError as err:
         raise ProxmoxAuthenticationError from err
-    except SSLError as err:
+    except ApiSSLError as err:
         raise ProxmoxSSLError from err
-    except ConnectTimeout as err:
+    except ProxmoxTimeoutError as err:
         raise ProxmoxConnectTimeout from err
-    except ResourceException as err:
+    except (ProxmoxPermissionsError, ApiServerError) as err:
         _LOGGER.debug("Error during Proxmox client initialisation", exc_info=True)
         raise ProxmoxInitFailed from err
-    except requests.exceptions.ConnectionError as err:
+    except ApiNoNodesError as err:
+        _LOGGER.debug("No nodes found during client initialisation", exc_info=True)
+        raise ProxmoxNoNodesFound from err
+    except ApiConnectionError as err:
         raise ProxmoxConnectionError from err
 
     try:
-        nodes = client.nodes.get()
-    except AuthenticationError as err:
+        nodes = client.get_nodes()
+    except ProxmoxAuthError as err:
         raise ProxmoxAuthenticationError from err
-    except SSLError as err:
+    except ApiSSLError as err:
         raise ProxmoxSSLError from err
-    except ConnectTimeout as err:
+    except ProxmoxTimeoutError as err:
         raise ProxmoxConnectTimeout from err
-    except ResourceException as err:
+    except (ApiNoNodesError, ApiServerError) as err:
         _LOGGER.debug("Error fetching nodes", exc_info=True)
         raise ProxmoxNoNodesFound from err
-    except requests.exceptions.ConnectionError as err:
+    except ApiConnectionError as err:
         raise ProxmoxConnectionError from err
 
     if not nodes:
@@ -148,14 +152,14 @@ def _get_nodes_data(data: dict[str, Any]) -> list[dict[str, Any]]:
             )
             continue
         try:
-            vms = client.nodes(node["node"]).qemu.get()
-            containers = client.nodes(node["node"]).lxc.get()
-        except ResourceException as err:
+            vms = client.get_vms(node["node"])
+            containers = client.get_containers(node["node"])
+        except ApiServerError as err:
             _LOGGER.debug(
                 "Error fetching VMs/LXC for node %s", node["node"], exc_info=True
             )
             raise ProxmoxNoVMLXCFound from err
-        except requests.exceptions.ConnectionError as err:
+        except ApiConnectionError as err:
             raise ProxmoxConnectionError from err
 
         nodes_data.append(
@@ -170,10 +174,17 @@ def _get_nodes_data(data: dict[str, Any]) -> list[dict[str, Any]]:
     return nodes_data
 
 
-class ProxmoxveConfigFlow(ConfigFlow, domain=DOMAIN):
+class ProxmoxveConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     """Handle a config flow for Proxmox VE."""
 
     VERSION = 3
+
+    @staticmethod
+    @override
+    def async_get_options_flow(config_entry: ConfigEntry) -> ProxmoxOptionsFlow:
+        """Get the options flow for this handler."""
+        return ProxmoxOptionsFlow()
+
     _data: dict[str, Any] = {}
     _entry: ConfigEntry
 
@@ -414,3 +425,39 @@ class ProxmoxAuthenticationError(ProxmoxError):
 
 class ProxmoxConnectionError(ProxmoxError):
     """Error to indicate a connection error."""
+
+
+class ProxmoxOptionsFlow(OptionsFlow):
+    """Handle a options flow for Proxmox VE."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Manage the Proxmox VE options."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            scan_interval = user_input[CONF_SCAN_INTERVAL]
+            if scan_interval < MIN_SCAN_INTERVAL:
+                errors["base"] = "invalid_scan_interval"
+            else:
+                return self.async_create_entry(
+                    title="", data={CONF_SCAN_INTERVAL: scan_interval}
+                )
+
+        options = dict(self.config_entry.options)
+        suggested = {
+            CONF_SCAN_INTERVAL: options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+        }
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(
+                vol.Schema(
+                    {
+                        vol.Required(CONF_SCAN_INTERVAL): cv.positive_int,
+                    }
+                ),
+                suggested,
+            ),
+            errors=errors,
+        )

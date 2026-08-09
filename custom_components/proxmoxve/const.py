@@ -1,39 +1,45 @@
 """Constants for ProxmoxVE."""
 
+from __future__ import annotations
+
 from enum import StrEnum
+from typing import Final
 
-DOMAIN = "proxmoxve"
-CONF_AUTH_METHOD = "auth_method"
-CONF_REALM = "realm"
-CONF_NODE = "node"
-CONF_NODES = "nodes"
-CONF_TOKEN_ID = "token_id"
-CONF_TOKEN_SECRET = "token_value"
-CONF_VMS = "vms"
-CONF_CONTAINERS = "containers"
+DOMAIN: Final = "proxmoxve"
+CONF_AUTH_METHOD: Final = "auth_method"
+CONF_REALM: Final = "realm"
+CONF_NODE: Final = "node"
+CONF_NODES: Final = "nodes"
+CONF_TOKEN_ID: Final = "token_id"
+CONF_TOKEN_SECRET: Final = "token_value"
+CONF_VMS: Final = "vms"
+CONF_CONTAINERS: Final = "containers"
 
-CONF_USER = "user"
+CONF_USER: Final = "user"
+CONF_SCAN_INTERVAL: Final = "scan_interval"
 
-NODE_ONLINE = "online"
-VM_CONTAINER_RUNNING = "running"
+NODE_ONLINE: Final = "online"
+VM_CONTAINER_RUNNING: Final = "running"
 
-STORAGE_ACTIVE = 1
-STORAGE_SHARED = 1
-STORAGE_ENABLED = 1
-STATUS_OK = "OK"
+STORAGE_ACTIVE: Final = 1
+STORAGE_SHARED: Final = 1
+STORAGE_ENABLED: Final = 1
+STATUS_OK: Final = "OK"
 
-AUTH_PAM = "pam"
-AUTH_PVE = "pve"
-AUTH_OTHER = "other"
-AUTH_METHODS = [AUTH_PAM, AUTH_PVE, AUTH_OTHER]
+AUTH_PAM: Final = "pam"
+AUTH_PVE: Final = "pve"
+AUTH_OTHER: Final = "other"
+AUTH_METHODS: Final = [AUTH_PAM, AUTH_PVE, AUTH_OTHER]
 
-DEFAULT_PORT = 8006
-DEFAULT_REALM = AUTH_PAM
-DEFAULT_TIMEOUT = 30
-DEFAULT_VERIFY_SSL = True
-TYPE_VM = 0
-TYPE_CONTAINER = 1
-UPDATE_INTERVAL = 60
+DEFAULT_PORT: Final = 8006
+DEFAULT_REALM: Final = AUTH_PAM
+DEFAULT_TIMEOUT: Final = 30
+DEFAULT_VERIFY_SSL: Final = True
+DEFAULT_SCAN_INTERVAL: Final = 60
+MIN_SCAN_INTERVAL: Final = 5
+TYPE_VM: Final = 0
+TYPE_CONTAINER: Final = 1
+UPDATE_INTERVAL: Final = 60
 
 
 class ProxmoxPermission(StrEnum):

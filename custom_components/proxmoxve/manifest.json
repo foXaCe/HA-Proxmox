@@ -1,12 +1,14 @@
 {
   "domain": "proxmoxve",
   "name": "Proxmox VE",
-  "codeowners": ["@Corbeno", "@erwindouna", "@CoMPaTech"],
+  "codeowners": ["@stephane"],
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/proxmoxve",
-  "integration_type": "service",
+  "documentation": "https://github.com/stephane/proxmoxve",
+  "integration_type": "hub",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/stephane/proxmoxve/issues",
   "loggers": ["proxmoxer"],
-  "quality_scale": "legacy",
-  "requirements": ["proxmoxer==2.3.0"]
+  "quality_scale": "silver",
+  "requirements": ["proxmoxer==2.3.0"],
+  "version": "2.0.0"
 }

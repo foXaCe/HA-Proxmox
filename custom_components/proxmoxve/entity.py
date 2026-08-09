@@ -1,16 +1,28 @@
 """Proxmox parent entity class."""
 
+from __future__ import annotations
+
+from abc import abstractmethod
 from typing import Any, override
 
+from homeassistant.components.button import ButtonEntity
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .api import (
+    ProxmoxAuthError,
+    ProxmoxConnectionError,
+    ProxmoxServerError,
+    ProxmoxSSLError,
+    ProxmoxTimeoutError,
+)
+from .api.models import ProxmoxNodeData
 from .const import DOMAIN
 from .coordinator import (
     ProxmoxCoordinator,
-    ProxmoxNodeData,
     node_device_info,
     proxmox_base_url,
 )
@@ -231,3 +243,42 @@ class ProxmoxContainerEntity(ProxmoxCoordinatorEntity):
     def container_data(self) -> dict[str, Any]:
         """Return the Container data."""
         return self.coordinator.data[self._node_name].containers[self.device_id]
+
+
+class ProxmoxBaseButton(ButtonEntity):
+    """Common base for Proxmox buttons.
+
+    Ensures the async_press logic and error handling aren't duplicated.
+    """
+
+    coordinator: ProxmoxCoordinator
+
+    @abstractmethod
+    async def _async_press_call(self) -> None:
+        """Abstract method used per Proxmox button class."""
+
+    @override
+    async def async_press(self) -> None:
+        """Trigger the Proxmox button press service."""
+        try:
+            await self._async_press_call()
+        except ProxmoxAuthError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="cannot_connect",
+            ) from err
+        except ProxmoxSSLError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_auth",
+            ) from err
+        except ProxmoxTimeoutError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="timeout_connect",
+            ) from err
+        except (ProxmoxServerError, ProxmoxConnectionError) as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="api_error_details",
+            ) from err
