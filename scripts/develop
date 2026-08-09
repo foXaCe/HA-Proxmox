@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+# Lance HA en mode debug avec l'intégration montée (devcontainer)
+echo "=== Home Assistant (dev) ==="
+python -m homeassistant --debug -c config 2>&1

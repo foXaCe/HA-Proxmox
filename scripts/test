@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+echo "=== Tests (pytest + coverage) ==="
+pytest --cov=custom_components/proxmoxve --cov-report=term-missing
+echo "=== Tests OK ==="

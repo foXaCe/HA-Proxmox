@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+echo "=== Release (tag + push) ==="
+# Lit la version depuis le manifest et crée un tag
+VERSION=$(jq -r .version custom_components/proxmoxve/manifest.json)
+echo "Release version : $VERSION"
+git tag -a "v$VERSION" -m "Release v$VERSION"
+git push origin "v$VERSION"
+echo "✓ Tag v$VERSION poussé — créez la release sur GitHub"

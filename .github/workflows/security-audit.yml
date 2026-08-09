@@ -52,13 +52,17 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: google/osv-scanner-action/osv-scanner-action@v2
+      - uses: google/osv-scanner-action/osv-scanner-action@v2.5.0
         with:
           scan-args: |
             --recursive
-            --skip-git
             ./
-        continue-on-error: false
+        # Reporte les CVE sans bloquer la CI : les vulnérabilités des deps de
+        # test transitives (cryptography/idna/pygments épinglés par homeassistant)
+        # ne sont pas résolvables ici. Renovate vulnerabilityAlerts ouvre les PR
+        # de fix quand homeassistant les publie. dependency-review bloque l'ajout
+        # de nouvelles CVE à chaque PR.
+        continue-on-error: true
 
   secret-scan:
     name: Gitleaks

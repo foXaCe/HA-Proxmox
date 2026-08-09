@@ -19,6 +19,10 @@ jobs:
     name: Open / maintain Release PR
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
@@ -28,22 +32,8 @@ jobs:
         id: release
         with:
           release-type: simple
-          package-name: proxmoxve
-          extra-files: |
-            custom_components/proxmoxve/manifest.json
-          changelog-types: |
-            [
-              {"type":"feat","section":"Added","hidden":false},
-              {"type":"fix","section":"Fixed","hidden":false},
-              {"type":"perf","section":"Changed","hidden":false},
-              {"type":"refactor","section":"Changed","hidden":false},
-              {"type":"docs","section":"Documentation","hidden":false},
-              {"type":"test","section":"Tests","hidden":true},
-              {"type":"build","section":"Build","hidden":true},
-              {"type":"ci","section":"CI","hidden":true},
-              {"type":"chore","section":"Miscellaneous","hidden":true},
-              {"type":"revert","section":"Reverted","hidden":false}
-            ]
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
 
   publish-assets:
     name: Build + upload zip
@@ -66,13 +56,11 @@ jobs:
 
       - name: Build zip
         run: |
-          cd custom_components/proxmoxve
-          zip -r ../../proxmoxve.zip . -x "*.pyc" "__pycache__/*"
-          cd ../..
+          zip -r proxmoxve.zip custom_components/proxmoxve -x "*.pyc" "__pycache__/*"
           sha256sum proxmoxve.zip > proxmoxve.zip.sha256
 
       - name: Upload assets to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: |
