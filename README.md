@@ -61,6 +61,17 @@ Les entités de diagnostic sont marquées `entity_category: diagnostic` et plusi
 pytest -q --cov=custom_components.proxmoxve
 ```
 
+## Remerciements
+
+Cette intégration est dérivée du composant **`proxmoxve` de Home Assistant Core**, dont elle reprend l'architecture (coordinator, entités par type de device, config flow) avant un refactor complet :
+
+- **Source d'origine** : [`home-assistant/core` — `homeassistant/components/proxmoxve`](https://github.com/home-assistant/core/tree/dev/homeassistant/components/proxmoxve)
+- **Codeowners d'origine** : [@Corbeno](https://github.com/Corbeno), [@erwindouna](https://github.com/erwindouna), [@CoMPaTech](https://github.com/CoMPaTech)
+- **Client API** : [proxmoxer](https://github.com/proxmoxer/proxmoxer)
+- **Documentation officielle** : [Proxmox VE integration](https://www.home-assistant.io/integrations/proxmoxve/)
+
+Merci aux mainteneurs de Home Assistant Core et de proxmoxer pour leur travail, qui a rendu cette intégration possible.
+
 ## Licence
 
 Ceci est une intégration custom à usage personnel, dérivée du composant `proxmoxve` de Home Assistant Core (Apache-2.0).
