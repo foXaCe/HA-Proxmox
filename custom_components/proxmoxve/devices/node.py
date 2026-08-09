@@ -194,7 +194,8 @@ NODE_BINARY_SENSORS: tuple[ProxmoxNodeBinarySensorEntityDescription, ...] = (
         state_fn=lambda data: data.node["status"] == NODE_ONLINE,
         device_class=BinarySensorDeviceClass.RUNNING,
         entity_category=EntityCategory.DIAGNOSTIC,
-        permission=ProxmoxPermission.VMAUDIT,  # PVEVMUsers are allowed this node, through "/vms"
+        # PVEVMUsers are allowed this node, through "/vms"
+        permission=ProxmoxPermission.VMAUDIT,
         permission_target="vms",
     ),
     ProxmoxNodeBinarySensorEntityDescription(

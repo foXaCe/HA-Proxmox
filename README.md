@@ -1,5 +1,15 @@
 # Proxmox VE — intégration custom Home Assistant
 
+[![GitHub Release][releases-shield]][releases]
+[![License][license-shield]](LICENSE)
+[![hacs][hacsbadge]][hacs]
+[![CI][ci-shield]][ci]
+[![Maintenance][maintenance-shield]][maintenance]
+[![Project Maintenance][maintainer-shield]][maintainer]
+[![hassfest validation][hassfest-shield]][hassfest]
+
+_Custom Home Assistant integration for Proxmox VE._
+
 Intégration Home Assistant **custom** pour piloter et surveiller un ou plusieurs serveurs [Proxmox VE](https://www.proxmox.com/), refactorée depuis la version legacy du core (quality_scale « legacy ») vers une structure modulaire testée.
 
 > ⚠️ **Override du core** : le domaine `proxmoxve` est identique à l'intégration officielle. Une fois installée, elle la **remplace**. Si vous l'installez via HACS, retirez toute référence à l'intégration core avant.
@@ -75,3 +85,18 @@ Merci aux mainteneurs de Home Assistant Core et de proxmoxer pour leur travail, 
 ## Licence
 
 Ceci est une intégration custom à usage personnel, dérivée du composant `proxmoxve` de Home Assistant Core (Apache-2.0).
+
+<!-- Badges links -->
+[releases-shield]: https://img.shields.io/github/release/foXaCe/HA-Proxmox.svg?style=for-the-badge
+[releases]: https://github.com/foXaCe/HA-Proxmox/releases
+[license-shield]: https://img.shields.io/github/license/foXaCe/HA-Proxmox.svg?style=for-the-badge
+[hacs]: https://github.com/hacs/integration
+[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/foXaCe/HA-Proxmox/ci.yml?branch=main&style=for-the-badge
+[ci]: https://github.com/foXaCe/HA-Proxmox/actions/workflows/ci.yml
+[hassfest-shield]: https://img.shields.io/github/actions/workflow/status/foXaCe/HA-Proxmox/hassfest.yml?branch=main&style=for-the-badge&label=hassfest
+[hassfest]: https://github.com/foXaCe/HA-Proxmox/actions/workflows/hassfest.yml
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg?style=for-the-badge
+[maintenance]: #
+[maintainer-shield]: https://img.shields.io/badge/maintainer-%40foXaCe-blue.svg?style=for-the-badge
+[maintainer]: https://github.com/foXaCe

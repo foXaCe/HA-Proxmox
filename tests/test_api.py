@@ -5,9 +5,9 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import pytest
+import requests
 from proxmoxer import AuthenticationError
 from proxmoxer.core import ResourceException
-import requests
 
 from custom_components.proxmoxve.api.client import ProxmoxClient
 from custom_components.proxmoxve.api.exceptions import (

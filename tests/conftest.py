@@ -7,7 +7,6 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -17,6 +16,7 @@ from homeassistant.const import (
     CONF_VERIFY_SSL,
 )
 from homeassistant.core import HomeAssistant
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.proxmoxve.const import (
     CONF_AUTH_METHOD,
@@ -29,7 +29,6 @@ from custom_components.proxmoxve.const import (
     DOMAIN,
 )
 from custom_components.proxmoxve.coordinator import ProxmoxCoordinator
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 pytest_plugins = "pytest_homeassistant_custom_component"
 

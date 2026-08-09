@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from custom_components.proxmoxve.api.models import NodeResources, ProxmoxNodeData
 
-from .conftest import NODE, VM, CONTAINER, STORAGE, BACKUP
+from .conftest import BACKUP, CONTAINER, NODE, STORAGE, VM
 
 
 def test_node_resources_defaults() -> None:

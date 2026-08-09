@@ -11,7 +11,7 @@ from custom_components.proxmoxve.diagnostics import (
     async_get_config_entry_diagnostics,
 )
 
-from .conftest import MOCK_HOST, MockNodeResources, NODE
+from .conftest import MOCK_HOST, NODE, MockNodeResources
 
 
 async def test_diagnostics_redacts_sensitive_data(

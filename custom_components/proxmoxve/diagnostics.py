@@ -19,7 +19,6 @@ async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, config_entry: ProxmoxConfigEntry
 ) -> dict[str, Any]:
     """Return diagnostics for a Proxmox VE config entry."""
-
     return {
         "config_entry": async_redact_data(config_entry.as_dict(), TO_REDACT),
         "devices": {

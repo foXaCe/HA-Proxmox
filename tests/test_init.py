@@ -13,8 +13,8 @@ from custom_components.proxmoxve.const import (
 from .conftest import (
     MOCK_HOST,
     MOCK_NODE_NAME,
-    MockNodeResources,
     NODE,
+    MockNodeResources,
 )
 
 

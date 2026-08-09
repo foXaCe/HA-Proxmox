@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-
 from homeassistant.core import HomeAssistant
 
 from custom_components.proxmoxve.api.exceptions import (
@@ -11,7 +10,7 @@ from custom_components.proxmoxve.api.exceptions import (
     ProxmoxServerError,
 )
 
-from .conftest import MOCK_NODE_NAME, MockNodeResources, NODE
+from .conftest import MOCK_NODE_NAME, NODE, MockNodeResources
 
 
 async def test_coordinator_populates_data(
@@ -125,7 +124,7 @@ async def test_coordinator_setup_error_branches(
         (ProxmoxConnectionError, ConfigEntryError),
     ]
 
-    for setup_exc, expected in cases:
+    for setup_exc, _ in cases:
         entry = config_entry.__class__(
             domain=config_entry.domain,
             title=config_entry.title,

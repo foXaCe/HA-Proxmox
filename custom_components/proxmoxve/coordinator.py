@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from datetime import timedelta
-import logging
 from typing import Any, override
-
-from yarl import URL
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
@@ -15,6 +13,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from yarl import URL
 
 from .api import (
     ProxmoxAuthError,

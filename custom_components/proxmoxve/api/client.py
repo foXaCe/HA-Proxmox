@@ -5,11 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from proxmoxer import AuthenticationError, ProxmoxAPI
-from proxmoxer.core import ResourceException
 import requests
-from requests.exceptions import ConnectTimeout, SSLError
-
 from homeassistant.const import (
     CONF_HOST,
     CONF_PASSWORD,
@@ -18,6 +14,9 @@ from homeassistant.const import (
     CONF_USERNAME,
     CONF_VERIFY_SSL,
 )
+from proxmoxer import AuthenticationError, ProxmoxAPI
+from proxmoxer.core import ResourceException
+from requests.exceptions import ConnectTimeout, SSLError
 
 from ..const import (
     CONF_NODE,

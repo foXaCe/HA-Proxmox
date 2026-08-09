@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 
 from custom_components.proxmoxve.system_health import system_health_info
 
-from .conftest import MockNodeResources, NODE
+from .conftest import NODE, MockNodeResources
 
 
 async def test_system_health_info_with_entry(

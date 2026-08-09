@@ -1,0 +1,35 @@
+[project]
+name = "home-assistant-proxmoxve"
+version = "2.0.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",
+    "I",
+    "N",
+    "UP",
+    "B",
+    "C4",
+    "SIM",
+    "ASYNC",
+    "D",
+]
+ignore = ["D203", "D213", "N818"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+"custom_components/proxmoxve/__init__.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--cov=custom_components/proxmoxve --cov-report=term-missing"
+asyncio_mode = "auto"

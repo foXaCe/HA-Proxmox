@@ -5,14 +5,13 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
-
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
 from custom_components.proxmoxve.coordinator import ProxmoxCoordinator
 
-from .conftest import MOCK_NODE_NAME, CONTAINER, VM
+from .conftest import CONTAINER, MOCK_NODE_NAME, VM
 
 
 async def test_node_buttons_created(hass: HomeAssistant, setup_integration) -> None:
@@ -86,8 +85,9 @@ async def test_container_start_button_press_connection_error(
     mock_client: MagicMock,
 ) -> None:
     """A connection error during press raises a translated HomeAssistantError."""
-    from custom_components.proxmoxve.api.exceptions import ProxmoxConnectionError
     from homeassistant.exceptions import HomeAssistantError
+
+    from custom_components.proxmoxve.api.exceptions import ProxmoxConnectionError
 
     mock_client.start_container.side_effect = ProxmoxConnectionError
 

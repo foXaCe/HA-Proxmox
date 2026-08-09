@@ -1,0 +1,4 @@
+-r requirements_test.txt
+ruff>=0.11
+mypy>=1.15
+prek>=0.0.42

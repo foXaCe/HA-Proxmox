@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from homeassistant.const import CONF_TOKEN
 from homeassistant.core import HomeAssistant
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.proxmoxve.__init__ import async_migrate_entry
 from custom_components.proxmoxve.const import (
     CONF_AUTH_METHOD,
     CONF_REALM,
     DOMAIN,
 )
-from custom_components.proxmoxve.__init__ import async_migrate_entry
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 
 async def test_migrate_v1_to_v3(hass: HomeAssistant) -> None:

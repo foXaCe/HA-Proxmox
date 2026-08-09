@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from homeassistant.const import PERCENTAGE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er

@@ -10,6 +10,8 @@ dist/
 
 # Test / coverage
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 coverage.xml
@@ -23,6 +25,13 @@ venv/
 .idea/
 *.swp
 .DS_Store
+Thumbs.db
+
+# Local / env
+*.local
+.env
+.envrc
+.python-version
 
 # HA dev
 custom_components/*/config_flow.py.bak*
