@@ -1,0 +1,14 @@
+# Default owner for everything in the repo
+* @foXaCe
+
+# Workflows
+/.github/ @foXaCe
+
+# Integration code
+/custom_components/proxmoxve/ @foXaCe
+
+# Translations
+/custom_components/proxmoxve/translations/ @foXaCe
+
+# Tests
+/tests/ @foXaCe
