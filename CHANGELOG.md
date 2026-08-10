@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.1...v2.0.2) (2026-08-10)
+
+
+### Bug Fixes
+
+* force manifest version in release zip and fix jsonpath config ([f01cc39](https://github.com/foXaCe/HA-Proxmox/commit/f01cc39c75d4cf2559f3890315e9e4b3249c9139))
+* zip structure for HACS zip_release (content at root, no custom_components nesting) ([6986c75](https://github.com/foXaCe/HA-Proxmox/commit/6986c757119c0185b88f04d31c48c1fefa0b913d))
+
 ## [2.0.1](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.0...v2.0.1) (2026-08-10)
 
 
