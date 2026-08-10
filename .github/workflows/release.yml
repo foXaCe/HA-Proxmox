@@ -48,11 +48,15 @@ jobs:
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
 
-      - name: Verify manifest version
+      - name: Set manifest version
+        # release-please ne bump pas toujours le manifest.json (jsonpath non
+        # propagé via l'action) : on force la version du manifest ici pour que
+        # le zip HACS embarque la bonne version.
         run: |
-          MV=$(jq -r .version custom_components/proxmoxve/manifest.json)
-          [ "$MV" = "${{ needs.release-please.outputs.version }}" ] \
-            || { echo "Manifest version $MV ≠ release ${{ needs.release-please.outputs.version }}"; exit 1; }
+          VERSION="${{ needs.release-please.outputs.version }}"
+          jq --arg v "$VERSION" '.version = $v' custom_components/proxmoxve/manifest.json \
+            > /tmp/manifest.json && mv /tmp/manifest.json custom_components/proxmoxve/manifest.json
+          echo "manifest version -> $(jq -r .version custom_components/proxmoxve/manifest.json)"
 
       - name: Build zip
         run: |
