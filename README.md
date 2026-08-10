@@ -24,6 +24,8 @@ Intégration Home Assistant **custom** pour piloter et surveiller un ou plusieur
 ### Manuel
 Copiez le dossier `custom_components/proxmoxve/` dans votre dossier `custom_components/` local puis redémarrez HA.
 
+> ⚠️ **Redémarrez HA après l'installation** : sans redémarrage, Home Assistant continue d'utiliser le config flow de l'intégration **core** (le flow est indexé au boot). Après redémarrage, vérifiez dans les logs que l'intégration chargée est `custom_components.proxmoxve` et non `homeassistant.components.proxmoxve`.
+
 ## Configuration
 
 Paramétrez via **Paramètres → Intégrations → Ajouter une intégration → Proxmox VE** :
