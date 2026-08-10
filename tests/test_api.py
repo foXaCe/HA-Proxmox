@@ -460,3 +460,42 @@ def test_remaining_container_actions(mock_api: MagicMock) -> None:
     instance.nodes("pve").lxc(105).status.stop.post.assert_called_once()
     instance.nodes("pve").lxc(105).status.reboot.post.assert_called_once()
     instance.nodes("pve").lxc(105).snapshot.post.assert_called_once_with(name="snap-1")
+
+
+@patch("custom_components.proxmoxve.api.client.ProxmoxAPI")
+def test_connect_caches_nodes_for_first_fetch(mock_api: MagicMock) -> None:
+    """connect() caches nodes so fetch_all_nodes avoids a second GET /nodes."""
+    instance = mock_api.return_value
+    instance.access.permissions.get.return_value = {"/vms": {"VM.Audit": 1}}
+    instance.nodes.get.return_value = [NODE]
+    instance.nodes(NODE["node"]).qemu.get.return_value = []
+    instance.nodes(NODE["node"]).lxc.get.return_value = []
+    instance.nodes(NODE["node"]).storage.get.return_value = []
+    instance.nodes(NODE["node"]).tasks.get.return_value = []
+
+    client = _client()
+    client.connect()
+    pairs = client.fetch_all_nodes()
+
+    assert len(pairs) == 1
+    # nodes.get ne doit être appelé qu'UNE fois (dans connect), pas dans fetch
+    assert instance.nodes.get.call_count == 1
+    assert client._cached_nodes is None  # cache consommé
+
+
+@patch("custom_components.proxmoxve.api.client.ProxmoxAPI")
+def test_fetch_all_nodes_without_connect_fetches_nodes(mock_api: MagicMock) -> None:
+    """fetch_all_nodes without prior connect() still fetches nodes."""
+    instance = mock_api.return_value
+    instance.nodes.get.return_value = [NODE]
+    instance.nodes(NODE["node"]).qemu.get.return_value = []
+    instance.nodes(NODE["node"]).lxc.get.return_value = []
+    instance.nodes(NODE["node"]).storage.get.return_value = []
+    instance.nodes(NODE["node"]).tasks.get.return_value = []
+
+    client = _client()
+    client.proxmox = instance
+    pairs = client.fetch_all_nodes()
+
+    assert len(pairs) == 1
+    assert instance.nodes.get.call_count == 1

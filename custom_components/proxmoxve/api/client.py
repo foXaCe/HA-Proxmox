@@ -49,6 +49,7 @@ class ProxmoxClient:
         self._data = sanitize_config_entry(data)
         self.proxmox: ProxmoxAPI
         self.permissions: dict[str, dict[str, int]] = {}
+        self._cached_nodes: list[dict[str, Any]] | None = None
 
     @property
     def host(self) -> str:
@@ -98,7 +99,7 @@ class ProxmoxClient:
             raise ProxmoxServerError from err
 
         try:
-            self.proxmox.nodes.get()
+            self._cached_nodes = self.proxmox.nodes.get() or []
         except ResourceException as err:
             if err.status_code in _FORBIDDEN_STATUS_CODE_RANGE:
                 raise ProxmoxNodesNotFoundError from err
@@ -123,18 +124,24 @@ class ProxmoxClient:
 
     def fetch_all_nodes(self) -> list[tuple[dict[str, Any], NodeResources]]:
         """Fetch all nodes with their VMs, containers, storages, and backups."""
-        try:
-            nodes = self.proxmox.nodes.get() or []
-        except AuthenticationError as err:
-            raise ProxmoxAuthError from err
-        except SSLError as err:
-            raise ProxmoxSSLError from err
-        except ConnectTimeout as err:
-            raise ProxmoxTimeoutError from err
-        except ResourceException as err:
-            raise ProxmoxServerError from err
-        except requests.exceptions.ConnectionError as err:
-            raise ProxmoxConnectionError from err
+        if self._cached_nodes is not None:
+            # connect() vient de valider les nodes : on les réutilise pour
+            # éviter un second GET /nodes au setup (gain de boot).
+            nodes = self._cached_nodes
+            self._cached_nodes = None
+        else:
+            try:
+                nodes = self.proxmox.nodes.get() or []
+            except AuthenticationError as err:
+                raise ProxmoxAuthError from err
+            except SSLError as err:
+                raise ProxmoxSSLError from err
+            except ConnectTimeout as err:
+                raise ProxmoxTimeoutError from err
+            except ResourceException as err:
+                raise ProxmoxServerError from err
+            except requests.exceptions.ConnectionError as err:
+                raise ProxmoxConnectionError from err
 
         return [(node, self._get_node_data(node)) for node in nodes]
 
