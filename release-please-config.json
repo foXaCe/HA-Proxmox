@@ -20,7 +20,13 @@
     ".": {
       "package-name": "proxmoxve",
       "release-type": "simple",
-      "extra-files": ["custom_components/proxmoxve/manifest.json"]
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/proxmoxve/manifest.json",
+          "jsonpath": ["$.version"]
+        }
+      ]
     }
   }
 }

@@ -1,14 +1,20 @@
 {
   "domain": "proxmoxve",
   "name": "Proxmox VE",
-  "codeowners": ["@foXaCe"],
+  "codeowners": [
+    "@foXaCe"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/foXaCe/HA-Proxmox",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/foXaCe/HA-Proxmox/issues",
-  "loggers": ["proxmoxer"],
+  "loggers": [
+    "proxmoxer"
+  ],
   "quality_scale": "silver",
-  "requirements": ["proxmoxer==2.3.0"],
-  "version": "2.0.0"
+  "requirements": [
+    "proxmoxer==2.3.0"
+  ],
+  "version": "2.0.1"
 }
