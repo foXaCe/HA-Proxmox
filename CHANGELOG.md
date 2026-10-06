@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.2...v2.0.3) (2026-10-05)
+
+
+### Bug Fixes
+
+* **config_flow:** migrate schemas from voluptuous to probatio ([#17](https://github.com/foXaCe/HA-Proxmox/issues/17)) ([85feebe](https://github.com/foXaCe/HA-Proxmox/commit/85feebe03ee6f8a22f3ad1a85d83069bbdcbf713))
+
 ## [2.0.2](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.1...v2.0.2) (2026-08-10)
 
 
