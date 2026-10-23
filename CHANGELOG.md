@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.3...v2.0.4) (2026-10-23)
+
+
+### Bug Fixes
+
+* **system_health:** register the info callback synchronously ([#26](https://github.com/foXaCe/HA-Proxmox/issues/26)) ([69e3396](https://github.com/foXaCe/HA-Proxmox/commit/69e3396c315d7e61e3e76cd7bfc5ab6fe50cfb8e))
+
 ## [2.0.3](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.2...v2.0.3) (2026-10-12)
 
 
