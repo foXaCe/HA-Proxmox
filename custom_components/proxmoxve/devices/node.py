@@ -18,14 +18,18 @@ from homeassistant.components.button import (
     ButtonEntityDescription,
 )
 from homeassistant.components.sensor import (
-    EntityCategory,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
-    StateType,
 )
-from homeassistant.const import PERCENTAGE, UnitOfInformation, UnitOfTime
+from homeassistant.const import (
+    PERCENTAGE,
+    EntityCategory,
+    UnitOfInformation,
+    UnitOfTime,
+)
+from homeassistant.helpers.typing import StateType
 from homeassistant.util import dt as dt_util
 
 from ..api.models import ProxmoxNodeData
