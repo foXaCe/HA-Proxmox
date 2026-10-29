@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.4...v2.0.5) (2026-10-29)
+
+
+### Bug Fixes
+
+* import EntityCategory and StateType from their own modules ([#28](https://github.com/foXaCe/HA-Proxmox/issues/28)) ([1742347](https://github.com/foXaCe/HA-Proxmox/commit/1742347ee2311c1c3a04bf6bd5f00eabb4a736b2))
+
 ## [2.0.4](https://github.com/foXaCe/HA-Proxmox/compare/v2.0.3...v2.0.4) (2026-10-23)
 
 
