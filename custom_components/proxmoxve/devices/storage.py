@@ -11,14 +11,13 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.components.sensor import (
-    EntityCategory,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
-    StateType,
 )
-from homeassistant.const import PERCENTAGE, UnitOfInformation
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfInformation
+from homeassistant.helpers.typing import StateType
 
 from ..const import STORAGE_ACTIVE, STORAGE_ENABLED, STORAGE_SHARED
 from ..entity import ProxmoxStorageEntity
